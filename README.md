@@ -12,12 +12,22 @@ Production-ready enterprise starter for Audit Planning, Execution, Findings, Fol
 - Maven
 - OpenAPI/Swagger
 
+## System Domains (2-Part Architecture)
+- **Part 1: Staff Info**: user registry, roles, authentication/authorization, and staff directory endpoints under `/api/staff`.
+- **Part 2: Audit Work**: planning, engagement execution, findings, action plans, and follow-up tracking under `/api/audit-work` and `/api/findings`.
+
 ## Project Structure
 ```
 src/main/java/com/example/auditmanagement
 ├── config
 ├── controller
+│   ├── auditwork
+│   ├── report
+│   └── staff
 ├── dto
+│   ├── auditwork
+│   ├── report
+│   └── staff
 ├── entity
 │   ├── common
 │   ├── oracle
@@ -29,6 +39,12 @@ src/main/java/com/example/auditmanagement
 │   └── postgres
 ├── security
 ├── service
+│   ├── auditwork
+│   │   └── impl
+│   ├── report
+│   │   └── impl
+│   ├── staff
+│   │   └── impl
 │   └── impl
 └── util
 ```
@@ -68,6 +84,15 @@ src/main/java/com/example/auditmanagement
 - `POST /api/findings`
 - `GET /api/findings?status=OPEN&page=0&size=20`
 - `GET /api/reports/read-only/findings/summary`
+
+### Staff Info
+- `GET /api/staff`
+
+### Audit Work
+- `POST /api/audit-work/plans`
+- `POST /api/audit-work/engagements`
+- `PUT /api/audit-work/action-plans/{actionPlanId}/evidence`
+- `GET /api/audit-work/action-plans/overdue?page=0&size=20`
 
 ## Sample Requests / Responses
 ### Register
@@ -164,3 +189,25 @@ Response:
 
 ## Oracle read-only user setup
 Create a low-privilege report user (`audit_report_reader`) in Oracle and grant `SELECT` privileges only on reporting tables/views used by read-only repositories.
+
+
+### Create Audit Plan
+Request:
+```json
+{
+  "auditYear": 2026,
+  "auditUniverse": "Procurement & Payments",
+  "riskRating": "HIGH",
+  "assignedAuditorId": 1
+}
+```
+
+### Create Audit Engagement
+Request:
+```json
+{
+  "title": "Procurement Process Audit",
+  "auditPlanId": 10,
+  "workingPaperUrl": "https://dms.local/wp/proc-2026-01"
+}
+```
