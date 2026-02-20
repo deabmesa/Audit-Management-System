@@ -53,6 +53,12 @@ src/main/java/com/example/auditmanagement
 
 > For strict distributed commit semantics across Oracle/PostgreSQL, integrate XA/JTA (e.g., Narayana). This starter demonstrates coordinated dual writes with explicit transaction managers.
 
+## Oracle Read-Only Reporting Database Access
+- Added dedicated `OracleReadOnlyConfig` with its own `DataSource`, `EntityManagerFactory`, and `TransactionManager`.
+- Repository package `repository.oracle.readonly` is intentionally isolated from write repositories.
+- Service methods use `@Transactional(readOnly = true, transactionManager = "oracleReadOnlyTransactionManager")` to enforce read-only reporting paths.
+- Endpoint: `GET /api/reports/read-only/findings/summary` (roles: `AUDIT_MANAGER`, `ADMIN`).
+
 ## API Endpoints
 ### Auth
 - `POST /api/auth/register`
@@ -61,6 +67,7 @@ src/main/java/com/example/auditmanagement
 ### Findings
 - `POST /api/findings`
 - `GET /api/findings?status=OPEN&page=0&size=20`
+- `GET /api/reports/read-only/findings/summary`
 
 ## Sample Requests / Responses
 ### Register
@@ -136,3 +143,24 @@ mvn clean spring-boot:run
 
 ## Swagger
 - `http://localhost:8080/swagger-ui.html`
+
+
+### Read-Only Finding Summary Report
+Response:
+```json
+[
+  {
+    "riskRating": "HIGH",
+    "status": "OPEN",
+    "total": 12
+  },
+  {
+    "riskRating": "MEDIUM",
+    "status": "CLOSED",
+    "total": 5
+  }
+]
+```
+
+## Oracle read-only user setup
+Create a low-privilege report user (`audit_report_reader`) in Oracle and grant `SELECT` privileges only on reporting tables/views used by read-only repositories.

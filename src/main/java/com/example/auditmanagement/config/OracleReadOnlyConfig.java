@@ -8,7 +8,6 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -20,43 +19,43 @@ import java.util.Map;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.example.auditmanagement.repository.oracle",
-        entityManagerFactoryRef = "oracleEntityManagerFactory",
-        transactionManagerRef = "oracleTransactionManager"
+        basePackages = "com.example.auditmanagement.repository.oracle.readonly",
+        entityManagerFactoryRef = "oracleReadOnlyEntityManagerFactory",
+        transactionManagerRef = "oracleReadOnlyTransactionManager"
 )
-public class OracleConfig {
+public class OracleReadOnlyConfig {
 
     @Bean
-    @Primary
-    @ConfigurationProperties(prefix = "app.datasource.oracle")
-    public DataSource oracleDataSource() {
+    @ConfigurationProperties(prefix = "app.datasource.oracle-read-only")
+    public DataSource oracleReadOnlyDataSource() {
         return DataSourceBuilder.create().build();
     }
 
     @Bean
-    @Primary
-    public LocalContainerEntityManagerFactoryBean oracleEntityManagerFactory(
+    public LocalContainerEntityManagerFactoryBean oracleReadOnlyEntityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("oracleDataSource") DataSource dataSource,
+            @Qualifier("oracleReadOnlyDataSource") DataSource dataSource,
             JpaProperties jpaProperties
     ) {
         Map<String, Object> properties = new HashMap<>(jpaProperties.getProperties());
-        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.hbm2ddl.auto", "none");
         properties.put("hibernate.dialect", "org.hibernate.dialect.OracleDialect");
+        properties.put("hibernate.default_schema", "AUDIT_APP");
 
         return builder
                 .dataSource(dataSource)
                 .packages("com.example.auditmanagement.entity.oracle", "com.example.auditmanagement.entity.common")
                 .properties(properties)
-                .persistenceUnit("oraclePersistenceUnit")
+                .persistenceUnit("oracleReadOnlyPersistenceUnit")
                 .build();
     }
 
     @Bean
-    @Primary
-    public PlatformTransactionManager oracleTransactionManager(
-            @Qualifier("oracleEntityManagerFactory") EntityManagerFactory entityManagerFactory
+    public PlatformTransactionManager oracleReadOnlyTransactionManager(
+            @Qualifier("oracleReadOnlyEntityManagerFactory") EntityManagerFactory entityManagerFactory
     ) {
-        return new JpaTransactionManager(entityManagerFactory);
+        JpaTransactionManager transactionManager = new JpaTransactionManager(entityManagerFactory);
+        transactionManager.setDefaultTimeout(30);
+        return transactionManager;
     }
 }

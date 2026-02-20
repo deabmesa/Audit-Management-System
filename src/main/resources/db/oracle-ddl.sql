@@ -80,3 +80,12 @@ CREATE TABLE action_plan (
     deleted NUMBER(1) DEFAULT 0 NOT NULL,
     CONSTRAINT fk_action_finding FOREIGN KEY (finding_id) REFERENCES finding(id)
 );
+
+-- Optional: create read-only reporting user for Oracle report endpoints.
+-- CREATE USER audit_report_reader IDENTIFIED BY audit_report_reader;
+-- GRANT CREATE SESSION TO audit_report_reader;
+-- GRANT SELECT ON users TO audit_report_reader;
+-- GRANT SELECT ON audit_plan TO audit_report_reader;
+-- GRANT SELECT ON audit_engagement TO audit_report_reader;
+-- GRANT SELECT ON finding TO audit_report_reader;
+-- GRANT SELECT ON action_plan TO audit_report_reader;

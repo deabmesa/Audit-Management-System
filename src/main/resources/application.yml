@@ -22,6 +22,16 @@ app:
         maximum-pool-size: 15
         minimum-idle: 5
         pool-name: OraclePool
+    oracle-read-only:
+      jdbc-url: jdbc:oracle:thin:@oracle:1521/XEPDB1
+      username: audit_report_reader
+      password: audit_report_reader
+      driver-class-name: oracle.jdbc.OracleDriver
+      hikari:
+        read-only: true
+        maximum-pool-size: 8
+        minimum-idle: 2
+        pool-name: OracleReadOnlyPool
     postgres:
       jdbc-url: jdbc:postgresql://postgres:5432/audit_reporting
       username: audit_reporting
