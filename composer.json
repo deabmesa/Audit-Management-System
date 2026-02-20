@@ -1,0 +1,14 @@
+{
+    "name": "audit/management-system",
+    "type": "project",
+    "description": "Web-based Audit Management System",
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^12.0",
+        "laravel/tinker": "^2.10"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "phpunit/phpunit": "^11.0"
+    }
+}
