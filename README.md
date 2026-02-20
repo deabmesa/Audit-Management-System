@@ -211,3 +211,39 @@ Request:
   "workingPaperUrl": "https://dms.local/wp/proc-2026-01"
 }
 ```
+
+
+## Red Hat Enterprise Linux 8 Deployment
+
+### Prerequisites
+```bash
+sudo dnf install -y java-17-openjdk java-17-openjdk-devel
+sudo dnf install -y git
+```
+
+### Build and package
+```bash
+mvn clean package -DskipTests
+```
+
+### Install as systemd service
+```bash
+./scripts/rhel8/install-service.sh
+sudo cp target/audit-management-system-1.0.0.jar /opt/audit-management/audit-management-system.jar
+sudo chown auditapp:auditapp /opt/audit-management/audit-management-system.jar
+sudo vi /etc/audit-management/audit-management.env
+sudo systemctl start audit-management
+sudo systemctl status audit-management
+```
+
+### Logs and operations
+```bash
+sudo journalctl -u audit-management -f
+sudo tail -f /var/log/audit-management/audit-management.log
+```
+
+Deployment files:
+- `deployment/rhel8/audit-management.service`
+- `deployment/rhel8/audit-management.env.example`
+- `src/main/resources/application-rhel8.yml`
+- `scripts/rhel8/install-service.sh`
