@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: audit-management-system
+  jpa:
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  datasource:
+    oracle:
+      jdbc-url: jdbc:oracle:thin:@oracle:1521/XEPDB1
+      username: audit_app
+      password: audit_app
+      driver-class-name: oracle.jdbc.OracleDriver
+      hikari:
+        maximum-pool-size: 15
+        minimum-idle: 5
+        pool-name: OraclePool
+    postgres:
+      jdbc-url: jdbc:postgresql://postgres:5432/audit_reporting
+      username: audit_reporting
+      password: audit_reporting
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 10
+        minimum-idle: 3
+        pool-name: PostgresPool
+  security:
+    jwt:
+      secret: change-this-secret-key-to-a-secure-minimum-32-characters
+      expiration-ms: 3600000
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.example.auditmanagement: INFO
