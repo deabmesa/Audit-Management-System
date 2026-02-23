@@ -236,3 +236,31 @@ If PHP extensions and DB connectivity are correct, the app should be ready for u
 - **Migrations**: `database/migrations`
 
 This keeps MVC separation clean and production maintainability high.
+
+
+## 18) Railway deployment (production)
+
+If deployment failed in Railway, use this sequence:
+
+1. Ensure Railway service uses this repository root.
+2. Confirm build runs `composer install --no-dev --optimize-autoloader`.
+3. Set Railway start command to:
+   ```bash
+   php artisan serve --host=0.0.0.0 --port=${PORT:-8080}
+   ```
+4. Add required environment variables in Railway:
+   - `APP_NAME`, `APP_ENV=production`, `APP_DEBUG=false`, `APP_KEY`, `APP_URL`
+   - `DB_CONNECTION=pgsql`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
+   - `DB_ORACLE_HOST`, `DB_ORACLE_PORT`, `DB_ORACLE_DATABASE`, `DB_ORACLE_SERVICE_NAME`, `DB_ORACLE_USERNAME`, `DB_ORACLE_PASSWORD`
+   - `SESSION_DRIVER=database`
+5. Run one-off migrate command in Railway shell/release phase:
+   ```bash
+   php artisan migrate --force
+   ```
+6. Validate health endpoint:
+   - `GET /up` returns JSON status.
+
+This repository now includes `Procfile` and `railway.json` with the same web start command.
+
+---
+

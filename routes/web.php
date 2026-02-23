@@ -8,6 +8,7 @@ use App\Http\Controllers\StaffInfoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect()->route('login.form'));
+Route::get('/up', fn () => response()->json(['status' => 'ok', 'service' => 'audit-management-system']));
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login.form');
