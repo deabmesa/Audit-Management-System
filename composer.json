@@ -1,0 +1,17 @@
+{
+  "name": "acme/audit-management-system",
+  "type": "project",
+  "description": "Production-ready Audit Management System on Laravel 10 with PostgreSQL + Oracle reporting",
+  "require": {
+    "php": "^8.1",
+    "laravel/framework": "^10.0",
+    "yajra/laravel-oci8": "^10.0",
+    "maatwebsite/excel": "^3.1",
+    "barryvdh/laravel-dompdf": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  }
+}
