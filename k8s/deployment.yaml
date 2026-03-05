@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-management
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: audit-management
+  template:
+    metadata:
+      labels:
+        app: audit-management
+    spec:
+      containers:
+        - name: audit-management
+          image: registry.example.com/audit-management-system:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: audit-app-config
+            - secretRef:
+                name: audit-app-secret
+          volumeMounts:
+            - mountPath: /var/www/html/storage/app/public/uploads
+              name: upload-storage
+        - name: postgres
+          image: postgres:16
+          env:
+            - name: POSTGRES_DB
+              valueFrom: {configMapKeyRef: {name: audit-app-config, key: DB_DATABASE}}
+            - name: POSTGRES_USER
+              valueFrom: {secretKeyRef: {name: audit-app-secret, key: DB_USERNAME}}
+            - name: POSTGRES_PASSWORD
+              valueFrom: {secretKeyRef: {name: audit-app-secret, key: DB_PASSWORD}}
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pgdata
+      volumes:
+        - name: upload-storage
+          persistentVolumeClaim:
+            claimName: audit-uploads-pvc
+        - name: pgdata
+          emptyDir: {}
