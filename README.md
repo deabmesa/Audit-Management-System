@@ -45,3 +45,14 @@ For air-gapped deployment, use scripts in `scripts/rhel8/`.
 ## Deployment (RHEL8)
 
 See `docs/deployment-rhel8.md`.
+
+
+## Runtime Preflight
+
+Before running artisan in new environments:
+
+```bash
+./scripts/rhel8/php-preflight.sh
+```
+
+This detects PHP/OpenSSL runtime mismatch issues (including `OPENSSL_1_1_1` errors) and linked SSL libraries.

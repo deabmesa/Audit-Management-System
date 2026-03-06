@@ -111,3 +111,34 @@ In `.env`:
 - Enforce TLS to DB endpoints
 - Enable HTTPS and enterprise certs
 - Rotate logs and back up DBs
+
+
+## 10) Troubleshooting: `OPENSSL_1_1_1` not found
+
+If you see an error like:
+
+```text
+php: /lib/x86_64-linux-gnu/libcrypto.so.1.1: version `OPENSSL_1_1_1' not found (required by php)
+```
+
+Run preflight checks:
+
+```bash
+./scripts/rhel8/php-preflight.sh
+```
+
+Typical fixes:
+
+1. Ensure PHP and OpenSSL come from the same OS/repo build chain.
+2. Remove/adjust `LD_LIBRARY_PATH` so PHP does not load incompatible OpenSSL libraries first.
+3. If Oracle client variables are set globally, keep them scoped to Oracle-only tooling and not PHP-FPM/Nginx processes.
+4. Restart services after environment changes:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart php-fpm nginx
+```
+
+For PHP-FPM, verify no conflicting env vars in `/etc/systemd/system/php-fpm.service.d/*.conf` or pool configs.
+
+See also: `docs/operations/php-openssl-troubleshooting.md`.
