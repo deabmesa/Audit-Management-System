@@ -71,7 +71,7 @@ sudo systemctl enable --now php-fpm
 ```nginx
 server {
     listen 80;
-    server_name audit.example.com;
+    server_name audit-management-system.example.com;
     root /var/www/audit-management-system/public;
 
     index index.php;

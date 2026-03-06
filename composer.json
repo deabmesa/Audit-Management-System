@@ -1,7 +1,7 @@
 {
-  "name": "enterprise/audit-management-system",
+  "name": "audit-management-system/audit-management-system",
   "type": "project",
-  "description": "Enterprise Audit Management System built with Laravel 10",
+  "description": "Audit Management System built with Laravel 10",
   "require": {
     "php": "^8.2",
     "laravel/framework": "^10.0",

@@ -1,6 +1,6 @@
-# Enterprise Audit Management System (Laravel 10)
+# Audit Management System (Laravel 10)
 
-Enterprise-ready Audit Management System scaffold with modular PAMS and Staff Information subsystems.
+Audit Management System scaffold with modular PAMS and Staff Information subsystems.
 
 ## Key Capabilities
 
