@@ -1,37 +1,47 @@
 # Enterprise Audit Management System (Laravel 10)
 
-This repository provides an enterprise-ready Audit Management System architecture with:
+Enterprise-ready Audit Management System scaffold with modular PAMS and Staff Information subsystems.
 
-- Multi-database setup: main PostgreSQL, external read-only PostgreSQL, and external read-only Oracle.
-- Dashboard system selector (Staff Information + PAMS).
-- Report template builder with SQL-based read-only report execution.
-- Rule management (role/user/report permission mapping).
-- Check-In / Check-Out module with audit history.
-- Security controls (RBAC, activity logging, upload validation).
-- Performance controls (Redis report caching, pagination).
+## Key Capabilities
 
-## Modules
+- Multi-database architecture:
+  - Main PostgreSQL (read/write) for PAMS and platform data
+  - External PostgreSQL (read-only)
+  - External Oracle (read-only via `yajra/laravel-oci8`)
+- Dashboard system selection UI with orange-themed cards
+- Report Template Builder (SELECT-only SQL, Redis caching, pagination)
+- Rules management (role-based + user-based report access)
+- Check-In / Check-Out tracking with history
+- Activity logging and evidence upload validation
 
-1. **Staff Information** (external PostgreSQL read-only)
-2. **PAMS** (Audit Program, Findings, Recommendation Tracking, Follow-up Monitoring, Audit Reports, Evidence Upload)
-3. **Report System**
-4. **Rule Management**
-5. **Check-In / Check-Out**
+## Environment Files
 
-## Quick Start
+- `.env.example` for generic setup
+- `.env.rhel8` for production-style RHEL8 deployment baseline
+
+Create runtime `.env`:
 
 ```bash
-composer install
-cp .env.example .env
+cp .env.rhel8 .env
 php artisan key:generate
-php artisan migrate
 ```
 
-## Example Reports
+## Vendor Dependencies
 
-- Staff Listing Report
-- Branch Staff Report
-- Transaction Monitoring Report
-- Audit Finding Report
+`vendor/` is intentionally not committed. Use:
 
-All report SQL queries are enforced as `SELECT` only.
+```bash
+composer install --no-dev --prefer-dist --optimize-autoloader
+```
+
+For air-gapped deployment, use scripts in `scripts/rhel8/`.
+
+## Database Setup
+
+- Main DB SQL: `sql/postgresql/01_main_database_setup.sql`
+- External read-only DB SQL: `sql/postgresql/02_external_staff_readonly_setup.sql`
+- Oracle read-only setup: `docs/operations/oracle-readonly-setup.md`
+
+## Deployment (RHEL8)
+
+See `docs/deployment-rhel8.md`.

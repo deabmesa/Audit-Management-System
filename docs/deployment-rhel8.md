@@ -1,6 +1,6 @@
 # Deployment Guide (Red Hat Enterprise Linux 8)
 
-## 1. Install Required Packages
+## 1) OS Packages
 
 ```bash
 sudo dnf install -y epel-release
@@ -9,7 +9,7 @@ sudo dnf module enable php:8.2 -y
 sudo dnf install -y nginx php php-cli php-fpm php-pgsql php-mbstring php-xml php-json php-bcmath php-zip unzip git redis
 ```
 
-Install Composer:
+## 2) Composer
 
 ```bash
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -17,19 +17,20 @@ php composer-setup.php
 sudo mv composer.phar /usr/local/bin/composer
 ```
 
-## 2. PostgreSQL + Oracle Client
+## 3) Database Prerequisites
 
-- Install PostgreSQL client/server per enterprise standard.
-- Install Oracle Instant Client (basic + sdk) for `yajra/laravel-oci8`.
+- Execute main PostgreSQL setup SQL (`sql/postgresql/01_main_database_setup.sql`)
+- Execute external PostgreSQL read-only setup SQL (`sql/postgresql/02_external_staff_readonly_setup.sql`)
+- Configure Oracle read-only user (see `docs/operations/oracle-readonly-setup.md`)
 
-## 3. Application Setup
+## 4) Online Deployment
 
 ```bash
 cd /var/www
 sudo git clone <repo-url> audit-management-system
 cd audit-management-system
-composer install --no-dev --optimize-autoloader
-cp .env.example .env
+composer install --no-dev --prefer-dist --optimize-autoloader
+cp .env.rhel8 .env
 php artisan key:generate
 php artisan migrate --force
 php artisan config:cache
@@ -37,23 +38,35 @@ php artisan route:cache
 php artisan view:cache
 ```
 
-## 4. Configure PHP-FPM
+## 5) Offline (Air-Gapped) Deployment
 
-Edit `/etc/php-fpm.d/www.conf`:
+On connected build host:
+
+```bash
+./scripts/rhel8/prepare-offline-bundle.sh offline-bundle
+```
+
+On offline target host:
+
+```bash
+./scripts/rhel8/install-offline.sh offline-bundle /var/www/audit-management-system
+```
+
+## 6) PHP-FPM
+
+Edit `/etc/php-fpm.d/www.conf` and ensure:
 
 - `user = nginx`
 - `group = nginx`
 - `listen = /run/php-fpm/www.sock`
 
-Then:
-
 ```bash
 sudo systemctl enable --now php-fpm
 ```
 
-## 5. Configure Nginx
+## 7) Nginx
 
-Example virtual host (`/etc/nginx/conf.d/audit.conf`):
+`/etc/nginx/conf.d/audit.conf`:
 
 ```nginx
 server {
@@ -80,29 +93,21 @@ sudo nginx -t
 sudo systemctl enable --now nginx
 ```
 
-## 6. Redis Cache
+## 8) Redis
 
 ```bash
 sudo systemctl enable --now redis
 ```
 
-Set `.env`:
+In `.env`:
 
 - `CACHE_DRIVER=redis`
 - `SESSION_DRIVER=redis`
 - `QUEUE_CONNECTION=redis`
 
-## 7. Security Hardening
+## 9) Security Hardening Checklist
 
-- Restrict DB users for external DBs to **SELECT only**.
-- Set strict firewall/security groups.
-- Enforce HTTPS with enterprise certificates.
-- Run scheduled backups and rotate logs.
-
-## 8. Process Supervision
-
-Use systemd or Supervisor for queue workers:
-
-```bash
-php artisan queue:work --sleep=3 --tries=3
-```
+- External DB users must be SELECT-only
+- Enforce TLS to DB endpoints
+- Enable HTTPS and enterprise certs
+- Rotate logs and back up DBs

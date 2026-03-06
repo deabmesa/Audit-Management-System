@@ -14,7 +14,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',
-            'sslmode' => 'prefer',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
         ],
 
         'external_pgsql' => [
@@ -27,7 +27,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',
-            'sslmode' => 'prefer',
+            'sslmode' => env('DB_EXTERNAL_PG_SSLMODE', 'require'),
             'read_only' => true,
         ],
 
