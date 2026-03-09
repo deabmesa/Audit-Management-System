@@ -56,3 +56,31 @@ Before running artisan in new environments:
 ```
 
 This detects PHP/OpenSSL runtime mismatch issues (including `OPENSSL_1_1_1` errors) and linked SSL libraries.
+
+
+## GitHub + Codespaces + PostgreSQL
+
+This repository includes out-of-the-box support for GitHub Codespaces and PostgreSQL:
+
+- Codespaces devcontainer: `.devcontainer/devcontainer.json`
+- Post-create bootstrap script: `scripts/codespaces/post-create.sh`
+- PostgreSQL service definition: `docker-compose.postgres.yml`
+- GitHub Actions CI: `.github/workflows/ci.yml`
+
+### Run locally with PostgreSQL
+
+```bash
+docker compose -f docker-compose.postgres.yml up -d
+cp .env.example .env
+composer install
+```
+
+### Codespaces behavior
+
+When Codespace is created, it will:
+
+1. Copy `.env.example` to `.env` (if missing)
+2. Run `composer install` (best effort)
+3. Start PostgreSQL with Docker Compose
+4. Wait until PostgreSQL is healthy
+
