@@ -91,6 +91,7 @@ If running `php artisan serve` fails with `php: command not found`:
 
 ```bash
 ./scripts/dev/install-php.sh
+./scripts/dev/artisan.sh key:generate
 ./scripts/dev/run-serve.sh
 ```
 
@@ -99,9 +100,10 @@ What these scripts do:
 - `install-php.sh`: installs PHP 8.2+ for Ubuntu (`apt`) or RHEL8 (`dnf`)
 - `run-serve.sh`: validates PHP + `artisan` before starting local server
 
-You can still run directly:
+You can still run directly (once PHP exists):
 
 ```bash
+php artisan key:generate
 php artisan serve --host=0.0.0.0 --port=8000
 ```
 
