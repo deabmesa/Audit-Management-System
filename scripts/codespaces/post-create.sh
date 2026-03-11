@@ -3,6 +3,11 @@ set -euo pipefail
 
 echo "[codespaces] Preparing Audit Management System workspace"
 
+if ! command -v php >/dev/null 2>&1; then
+  echo "[codespaces] php not found, attempting install"
+  bash scripts/dev/install-php.sh
+fi
+
 if [ ! -f .env ]; then
   cp .env.example .env
   echo "[codespaces] .env created from .env.example"

@@ -84,3 +84,24 @@ When Codespace is created, it will:
 3. Start PostgreSQL with Docker Compose
 4. Wait until PostgreSQL is healthy
 
+
+## Local Runtime Quick Fix (`php: command not found`)
+
+If running `php artisan serve` fails with `php: command not found`:
+
+```bash
+./scripts/dev/install-php.sh
+./scripts/dev/run-serve.sh
+```
+
+What these scripts do:
+
+- `install-php.sh`: installs PHP 8.2+ for Ubuntu (`apt`) or RHEL8 (`dnf`)
+- `run-serve.sh`: validates PHP + `artisan` before starting local server
+
+You can still run directly:
+
+```bash
+php artisan serve --host=0.0.0.0 --port=8000
+```
+
