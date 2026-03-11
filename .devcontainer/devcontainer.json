@@ -6,15 +6,22 @@
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
-  "postCreateCommand": "bash scripts/codespaces/post-create.sh",
-  "forwardPorts": [5432],
+  "postCreateCommand": "bash scripts/codespaces/post-create.sh && bash scripts/dev/configure-vscode-php.sh",
+  "forwardPorts": [
+    5432
+  ],
   "customizations": {
     "vscode": {
       "extensions": [
         "bmewburn.vscode-intelephense-client",
         "xdebug.php-debug",
         "ms-azuretools.vscode-docker"
-      ]
+      ],
+      "settings": {
+        "php.validate.enable": true,
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "intelephense.environment.phpVersion": "8.2.0"
+      }
     }
   }
 }

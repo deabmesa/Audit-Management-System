@@ -107,3 +107,18 @@ php artisan key:generate
 php artisan serve --host=0.0.0.0 --port=8000
 ```
 
+
+## VS Code / Codespaces PHP Validation Fix
+
+If VS Code shows:
+
+`Cannot validate since a PHP installation could not be found. Use the setting 'php.validate.executablePath' to configure the PHP executable.`
+
+Run:
+
+```bash
+./scripts/dev/configure-vscode-php.sh
+```
+
+This script installs PHP if missing and writes `.vscode/settings.json` with the detected PHP binary path.
+

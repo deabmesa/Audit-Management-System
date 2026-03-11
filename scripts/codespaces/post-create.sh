@@ -34,3 +34,7 @@ done
 
 echo "[codespaces] PostgreSQL did not become ready in time"
 exit 1
+
+
+echo "[codespaces] Configuring VS Code PHP validation path"
+bash scripts/dev/configure-vscode-php.sh
