@@ -1,14 +1,32 @@
-# Audit Management System (Laravel + PostgreSQL)
+# Audit Management System (Laravel 10 + PostgreSQL)
 
-This project is an offline-ready Audit Management System built for Linux deployment.
+Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`) and modules for:
 
-## Modules
-- User Management (CRUD, roles, activity logs)
+- User Management
 - Audit Planning
 - Audit Fieldwork
 - Audit Findings
 - Follow-up Tracking
 - Dashboard analytics
 
-## Offline deployment
-Use `deploy.sh` and see `OFFLINE_INSTALLATION.md`.
+## Project structure delivered
+- Laravel-style app bootstrapping (`artisan`, `bootstrap/app.php`, `public/index.php`)
+- Models, controllers, middleware, routes
+- Blade views with Bootstrap-styled UI
+- PostgreSQL migrations with FKs and indexes
+- Seeders + demo data
+- Offline deployment script (`deploy.sh`)
+- Offline installation guide (`OFFLINE_INSTALLATION.md`)
+
+## Quick start
+1. Copy `.env.example` to `.env` and configure PostgreSQL.
+2. Ensure `vendor/` (Composer dependencies) exists.
+3. Run:
+   ```bash
+   ./deploy.sh
+   ```
+
+## Demo users
+- `admin@audit.local` / `password123`
+- `auditor@audit.local` / `password123`
+- `reviewer@audit.local` / `password123`

@@ -29,7 +29,9 @@ class UserController extends Controller
             'role' => 'required|in:Admin,Auditor,Reviewer',
         ]);
         $data['password'] = Hash::make($data['password']);
-        User::create($data);
+        $user = User::create($data);
+
+        $this->logActivity($request, "Created user {$user->email}");
 
         return redirect()->route('users.index')->with('success', 'User created.');
     }
@@ -54,12 +56,22 @@ class UserController extends Controller
         }
         $user->update($data);
 
+        $this->logActivity($request, "Updated user {$user->email}");
+
         return redirect()->route('users.index')->with('success', 'User updated.');
     }
 
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
+        if ($user->id === auth()->id()) {
+            return redirect()->route('users.index')->withErrors(['error' => 'You cannot delete your own account.']);
+        }
+
+        $email = $user->email;
         $user->delete();
+
+        $this->logActivity($request, "Deleted user {$email}");
+
         return redirect()->route('users.index')->with('success', 'User deleted.');
     }
 
@@ -67,5 +79,14 @@ class UserController extends Controller
     {
         $logs = UserActivityLog::with('user')->latest()->paginate(20);
         return view('users.logs', compact('logs'));
+    }
+
+    private function logActivity(Request $request, string $activity): void
+    {
+        UserActivityLog::create([
+            'user_id' => auth()->id(),
+            'activity' => $activity,
+            'ip_address' => $request->ip(),
+        ]);
     }
 }
