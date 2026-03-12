@@ -56,7 +56,7 @@ chmod +x deploy.sh
 - Replace placeholder Bootstrap files in `public/css/bootstrap.min.css` and `public/js/bootstrap.bundle.min.js` with the official Bootstrap 5 artifacts in production packaging.
 
 ## Troubleshooting
-- If you see `Error: complete Composer dependencies are missing (vendor/composer/autoload_real.php not found).`, dependencies were not packaged.
+- If you see an error about incomplete Composer dependencies, the full `vendor/` directory was not packaged (`vendor/autoload.php` and `vendor/composer/autoload_real.php` are required).
 - On a connected Linux build machine, run:
   ```bash
   composer install --no-dev --optimize-autoloader

@@ -33,7 +33,7 @@ Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`)
 
 
 ## Troubleshooting
-- Error `vendor/composer/autoload_real.php` missing means full Composer dependencies were not included in the deployment package.
+- Error about incomplete Composer dependencies means the full `vendor/` package was not included (both `vendor/autoload.php` and `vendor/composer/autoload_real.php` are required).
 - Build dependencies on a connected Linux machine with:
   ```bash
   composer install --no-dev --optimize-autoloader
