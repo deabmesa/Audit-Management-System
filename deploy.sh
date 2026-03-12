@@ -13,9 +13,28 @@ if [ ! -f .env ]; then
   echo ".env created from .env.example"
 fi
 
-if [ ! -f vendor/autoload.php ] || [ ! -f vendor/composer/autoload_real.php ]; then
-  echo "Error: Composer dependencies are incomplete (vendor/autoload.php and vendor/composer/autoload_real.php are required)."
-  echo "Build vendor on an online machine and copy the complete vendor directory here for offline deployment."
+required_composer_files=(
+  "vendor/autoload.php"
+  "vendor/composer/autoload_classmap.php"
+  "vendor/composer/autoload_namespaces.php"
+  "vendor/composer/autoload_psr4.php"
+  "vendor/composer/autoload_real.php"
+  "vendor/composer/autoload_static.php"
+  "vendor/composer/ClassLoader.php"
+  "vendor/composer/installed.json"
+  "vendor/composer/installed.php"
+)
+
+for file in "${required_composer_files[@]}"; do
+  if [ ! -f "$file" ]; then
+    echo "Error: Composer dependencies are incomplete ($file missing)."
+    echo "Build vendor on an online machine and copy the complete vendor directory here for offline deployment."
+    exit 1
+  fi
+done
+
+if grep -q "Placeholder only" vendor/composer/installed.json 2>/dev/null; then
+  echo "Error: Placeholder vendor files detected. Replace with a real Composer-built vendor directory."
   exit 1
 fi
 

@@ -4,8 +4,11 @@ define('LARAVEL_START', microtime(true));
 
 $autoloadPath = __DIR__.'/../vendor/autoload.php';
 $autoloadRealPath = __DIR__.'/../vendor/composer/autoload_real.php';
+$installedJsonPath = __DIR__.'/../vendor/composer/installed.json';
+$hasPlaceholderVendor = file_exists($installedJsonPath)
+    && str_contains((string) file_get_contents($installedJsonPath), 'Placeholder only');
 
-if (! file_exists($autoloadPath) || ! file_exists($autoloadRealPath)) {
+if (! file_exists($autoloadPath) || ! file_exists($autoloadRealPath) || $hasPlaceholderVendor) {
     http_response_code(500);
     header('Content-Type: text/plain; charset=UTF-8');
     echo "Application dependencies are incomplete.\n";

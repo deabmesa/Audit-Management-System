@@ -1,0 +1,4 @@
+{
+  "warning": "Placeholder only. Build full vendor with composer install --no-dev --optimize-autoloader on an online machine.",
+  "packages": []
+}

@@ -38,4 +38,6 @@ Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`)
   ```bash
   composer install --no-dev --optimize-autoloader
   ```
+- Required Composer files include `vendor/autoload.php` and core files under `vendor/composer/` (e.g., `autoload_real.php`, `autoload_psr4.php`, `autoload_static.php`, `ClassLoader.php`, `installed.json`, `installed.php`).
+- If placeholder vendor files are present, replace them with the complete generated `vendor/` directory.
 - Copy the resulting `vendor/` folder into this project before running `./deploy.sh`.
