@@ -13,8 +13,9 @@ if [ ! -f .env ]; then
   echo ".env created from .env.example"
 fi
 
-if [ ! -f vendor/autoload.php ]; then
-  echo "Error: vendor/autoload.php missing. Build vendor on an online machine and copy it here for offline deployment."
+if [ ! -f vendor/composer/autoload_real.php ]; then
+  echo "Error: complete Composer dependencies are missing (vendor/composer/autoload_real.php not found)."
+  echo "Build vendor on an online machine and copy it here for offline deployment."
   exit 1
 fi
 

@@ -3,8 +3,9 @@
 define('LARAVEL_START', microtime(true));
 
 $autoloadPath = __DIR__.'/../vendor/autoload.php';
+$autoloadRealPath = __DIR__.'/../vendor/composer/autoload_real.php';
 
-if (! file_exists($autoloadPath)) {
+if (! file_exists($autoloadRealPath)) {
     http_response_code(500);
     header('Content-Type: text/plain; charset=UTF-8');
     echo "Application dependencies are missing.\n";
