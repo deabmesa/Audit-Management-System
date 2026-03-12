@@ -6,6 +6,14 @@ define('LARAVEL_START', microtime(true));
 $autoloadPath = __DIR__.'/vendor/autoload.php';
 
 if (! file_exists($autoloadPath)) {
+    $versionFlags = ['--version', '-V'];
+
+    if (count(array_intersect($versionFlags, $argv ?? [])) > 0) {
+        fwrite(STDOUT, "Laravel Framework (dependencies not packaged in this environment)\n");
+        fwrite(STDOUT, "To run Artisan commands, copy vendor/ from an online build machine.\n");
+        exit(0);
+    }
+
     fwrite(STDERR, "Error: {$autoloadPath} not found.\n");
     fwrite(STDERR, "This project is configured for offline deployment and requires a prebuilt vendor directory.\n");
     fwrite(STDERR, "Run 'composer install --no-dev --optimize-autoloader' on an online Linux machine, then copy the vendor folder here.\n");
