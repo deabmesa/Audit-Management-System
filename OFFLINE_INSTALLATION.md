@@ -54,3 +54,11 @@ chmod +x deploy.sh
 
 ## Notes
 - Replace placeholder Bootstrap files in `public/css/bootstrap.min.css` and `public/js/bootstrap.bundle.min.js` with the official Bootstrap 5 artifacts in production packaging.
+
+## Troubleshooting
+- If you see `Error: /path/to/vendor/autoload.php not found`, dependencies were not packaged.
+- On a connected Linux build machine, run:
+  ```bash
+  composer install --no-dev --optimize-autoloader
+  ```
+- Re-copy the generated `vendor/` directory to the offline server and rerun `./deploy.sh`.

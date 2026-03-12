@@ -30,3 +30,12 @@ Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`)
 - `admin@audit.local` / `password123`
 - `auditor@audit.local` / `password123`
 - `reviewer@audit.local` / `password123`
+
+
+## Troubleshooting
+- Error `vendor/autoload.php` missing means Composer dependencies were not included in the deployment package.
+- Build dependencies on a connected Linux machine with:
+  ```bash
+  composer install --no-dev --optimize-autoloader
+  ```
+- Copy the resulting `vendor/` folder into this project before running `./deploy.sh`.
