@@ -1,0 +1,11 @@
+/* Bootstrap 5 placeholder. Replace with official bootstrap.min.css in offline package build pipeline. */
+:root{--bs-primary:#0d6efd;--bs-success:#198754;--bs-danger:#dc3545;--bs-dark:#212529;--bs-light:#f8f9fa}
+body{margin:0;font-family:Arial,sans-serif;background:#f8f9fa}
+.container,.container-fluid{padding:0 1rem}.row{display:flex;flex-wrap:wrap}.col,.col-md-3,.col-md-6{flex:1;padding:.5rem}
+.card{background:#fff;border:1px solid #dee2e6;border-radius:.375rem}.card-body{padding:1rem}
+.btn{display:inline-block;padding:.375rem .75rem;border:1px solid transparent;border-radius:.375rem;text-decoration:none;cursor:pointer}
+.btn-primary{background:#0d6efd;color:#fff}.btn-success{background:#198754;color:#fff}.btn-danger{background:#dc3545;color:#fff}.btn-warning{background:#ffc107;color:#000}.btn-info{background:#0dcaf0;color:#000}
+.table{width:100%;border-collapse:collapse}.table td,.table th{border:1px solid #dee2e6;padding:.5rem}
+.form-control,.form-select{width:100%;padding:.375rem .75rem;border:1px solid #ced4da;border-radius:.375rem}
+.alert{padding:.75rem 1rem;border-radius:.375rem}.alert-success{background:#d1e7dd}
+.navbar{padding:.75rem 1rem}.bg-dark{background:#212529}.navbar-dark a{color:#fff}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:1rem}.mb-4{margin-bottom:1.5rem}.my-2{margin:.5rem 0}

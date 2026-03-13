@@ -1,0 +1,43 @@
+# Audit Management System (Laravel 10 + PostgreSQL)
+
+Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`) and modules for:
+
+- User Management
+- Audit Planning
+- Audit Fieldwork
+- Audit Findings
+- Follow-up Tracking
+- Dashboard analytics
+
+## Project structure delivered
+- Laravel-style app bootstrapping (`artisan`, `bootstrap/app.php`, `public/index.php`)
+- Models, controllers, middleware, routes
+- Blade views with Bootstrap-styled UI
+- PostgreSQL migrations with FKs and indexes
+- Seeders + demo data
+- Offline deployment script (`deploy.sh`)
+- Offline installation guide (`OFFLINE_INSTALLATION.md`)
+
+## Quick start
+1. Copy `.env.example` to `.env` and configure PostgreSQL.
+2. Ensure `vendor/` (Composer dependencies) exists.
+3. Run:
+   ```bash
+   ./deploy.sh
+   ```
+
+## Demo users
+- `admin@audit.local` / `password123`
+- `auditor@audit.local` / `password123`
+- `reviewer@audit.local` / `password123`
+
+
+## Troubleshooting
+- Error about incomplete Composer dependencies means the full `vendor/` package was not included (both `vendor/autoload.php` and `vendor/composer/autoload_real.php` are required).
+- Build dependencies on a connected Linux machine with:
+  ```bash
+  composer install --no-dev --optimize-autoloader
+  ```
+- Required Composer files include `vendor/autoload.php` and core files under `vendor/composer/` (e.g., `autoload_real.php`, `autoload_psr4.php`, `autoload_static.php`, `ClassLoader.php`, `installed.json`, `installed.php`).
+- If placeholder vendor files are present, replace them with the complete generated `vendor/` directory.
+- Copy the resulting `vendor/` folder into this project before running `./deploy.sh`.
