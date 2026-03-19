@@ -25,10 +25,32 @@ require_command() {
   fi
 }
 
+assert_supported_os() {
+  local release_file="/etc/redhat-release"
+  if [[ ! -f "${release_file}" ]]; then
+    log "Warning: ${release_file} not found. Continuing without OS validation."
+    return
+  fi
+
+  local release_text
+  release_text=$(<"${release_file}")
+  case "${release_text}" in
+    *"release 8."*)
+      log "Detected supported Red Hat Enterprise Linux 8 family host: ${release_text}"
+      ;;
+    *)
+      log "Error: this deployment script is intended for Red Hat Enterprise Linux 8.x hosts (tested target: 8.10)."
+      log "Detected host: ${release_text}"
+      exit 1
+      ;;
+  esac
+}
+
 log "Starting Audit Management System deployment..."
 
 require_command java
 require_command mvn
+assert_supported_os
 
 if [[ ! -f pom.xml ]]; then
   log "Error: pom.xml not found. Run this script from the project root."

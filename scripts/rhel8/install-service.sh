@@ -7,6 +7,30 @@ APP_HOME="/opt/audit-management"
 APP_ETC="/etc/audit-management"
 APP_LOG_DIR="/var/log/audit-management"
 
+assert_supported_os() {
+  local release_file="/etc/redhat-release"
+  if [[ ! -f "${release_file}" ]]; then
+    echo "Warning: ${release_file} not found. Continuing without OS validation."
+    return
+  fi
+
+  local release_text
+  release_text=$(<"${release_file}")
+  case "${release_text}" in
+    *"release 8."*)
+      echo "Detected supported Red Hat Enterprise Linux 8 family host: ${release_text}"
+      ;;
+    *)
+      echo "Error: this installer targets Red Hat Enterprise Linux 8.x (tested target: 8.10)."
+      echo "Detected host: ${release_text}"
+      exit 1
+      ;;
+  esac
+}
+
+
+assert_supported_os
+
 sudo groupadd -f "${APP_GROUP}"
 id -u "${APP_USER}" >/dev/null 2>&1 || sudo useradd -r -g "${APP_GROUP}" -d "${APP_HOME}" -s /sbin/nologin "${APP_USER}"
 

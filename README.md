@@ -213,7 +213,11 @@ Request:
 ```
 
 
-## Red Hat Enterprise Linux 8 Deployment
+## Red Hat Enterprise Linux 8.10 Deployment
+
+### Target platform
+- Tested/documented target: **Red Hat Enterprise Linux 8.10**.
+- The helper scripts validate the host as a Red Hat Enterprise Linux 8.x family system before installing the service.
 
 ### Prerequisites
 ```bash
@@ -230,7 +234,7 @@ mvn clean package -DskipTests
 ```bash
 ./deploy.sh
 ```
-This script builds the Spring Boot jar, installs it to `/opt/audit-management`, provisions the `auditapp` service account, installs the systemd unit, and restarts the `audit-management` service.
+This script builds the Spring Boot jar, validates that the host is in the Red Hat Enterprise Linux 8.x family (tested target: 8.10), installs it to `/opt/audit-management`, provisions the `auditapp` service account, installs the systemd unit, and restarts the `audit-management` service.
 
 ### Install as systemd service
 ```bash
