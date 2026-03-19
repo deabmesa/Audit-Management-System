@@ -64,3 +64,16 @@ chmod +x deploy.sh
 - If `vendor.tar.gz`, `vendor.tgz`, or `vendor.zip` is present, `./deploy.sh` will extract it automatically before bootstrapping.
 - If `composer` is available, `./deploy.sh` will otherwise try to rebuild dependencies locally before failing.
 - Re-copy the generated `vendor/` directory or a packaged vendor archive to the offline server and rerun `./deploy.sh` if local rebuild is unavailable or fails.
+
+
+## 7) Docker deployment
+You can run the project in Docker with PostgreSQL using the provided `Dockerfile` and `docker-compose.yml`.
+
+1. Ensure the project contains either a real `vendor/` directory or a packaged `vendor.tar.gz`.
+2. Start the stack:
+   ```bash
+   docker compose up --build
+   ```
+3. The application will be available on `http://localhost:8000`, and the PostgreSQL service will listen on `localhost:5432`.
+
+The container entrypoint copies `.env.example` to `.env`, applies the database defaults for Docker, and then runs `./deploy.sh`.

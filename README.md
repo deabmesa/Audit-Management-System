@@ -43,3 +43,14 @@ Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`)
 - If placeholder vendor files are present and `composer` is available on the target server, `./deploy.sh` will otherwise try `composer install --no-dev --optimize-autoloader`.
 - If that automatic rebuild fails, replace the placeholder files with the complete generated `vendor/` directory or include a packaged vendor archive.
 - Copy the resulting `vendor/` folder or packaged vendor archive into this project before running `./deploy.sh`.
+
+
+## Docker run
+1. Package real Composer dependencies into `vendor/` or provide `vendor.tar.gz` in the project root.
+2. Build and start the containers:
+   ```bash
+   docker compose up --build
+   ```
+3. Open the application at `http://localhost:8000`.
+
+The `app` container runs `deploy.sh` on startup, and will automatically extract `vendor.tar.gz` if present before bootstrapping.
