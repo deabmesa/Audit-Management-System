@@ -226,6 +226,12 @@ sudo dnf install -y git
 mvn clean package -DskipTests
 ```
 
+### One-command deployment
+```bash
+./deploy.sh
+```
+This script builds the Spring Boot jar, installs it to `/opt/audit-management`, provisions the `auditapp` service account, installs the systemd unit, and restarts the `audit-management` service.
+
 ### Install as systemd service
 ```bash
 ./scripts/rhel8/install-service.sh
