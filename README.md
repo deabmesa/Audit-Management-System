@@ -39,6 +39,7 @@ Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`)
   composer install --no-dev --optimize-autoloader
   ```
 - Required Composer files include `vendor/autoload.php` and core files under `vendor/composer/` (e.g., `autoload_real.php`, `autoload_psr4.php`, `autoload_static.php`, `ClassLoader.php`, `installed.json`, `installed.php`).
-- If placeholder vendor files are present and `composer` is available on the target server, `./deploy.sh` will first try `composer install --no-dev --optimize-autoloader`.
-- If that automatic rebuild fails, replace the placeholder files with the complete generated `vendor/` directory.
-- Copy the resulting `vendor/` folder into this project before running `./deploy.sh`.
+- If a packaged dependency archive such as `vendor.tar.gz`, `vendor.tgz`, or `vendor.zip` is present, `./deploy.sh` will extract it automatically before bootstrapping.
+- If placeholder vendor files are present and `composer` is available on the target server, `./deploy.sh` will otherwise try `composer install --no-dev --optimize-autoloader`.
+- If that automatic rebuild fails, replace the placeholder files with the complete generated `vendor/` directory or include a packaged vendor archive.
+- Copy the resulting `vendor/` folder or packaged vendor archive into this project before running `./deploy.sh`.

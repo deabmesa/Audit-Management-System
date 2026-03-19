@@ -61,5 +61,6 @@ chmod +x deploy.sh
   ```bash
   composer install --no-dev --optimize-autoloader
   ```
-- If `composer` is available, `./deploy.sh` will try to rebuild dependencies locally before failing.
-- Re-copy the generated `vendor/` directory to the offline server and rerun `./deploy.sh` if local rebuild is unavailable or fails.
+- If `vendor.tar.gz`, `vendor.tgz`, or `vendor.zip` is present, `./deploy.sh` will extract it automatically before bootstrapping.
+- If `composer` is available, `./deploy.sh` will otherwise try to rebuild dependencies locally before failing.
+- Re-copy the generated `vendor/` directory or a packaged vendor archive to the offline server and rerun `./deploy.sh` if local rebuild is unavailable or fails.
