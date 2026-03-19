@@ -61,4 +61,5 @@ chmod +x deploy.sh
   ```bash
   composer install --no-dev --optimize-autoloader
   ```
-- Re-copy the generated `vendor/` directory to the offline server and rerun `./deploy.sh`.
+- If `composer` is available, `./deploy.sh` will try to rebuild dependencies locally before failing.
+- Re-copy the generated `vendor/` directory to the offline server and rerun `./deploy.sh` if local rebuild is unavailable or fails.

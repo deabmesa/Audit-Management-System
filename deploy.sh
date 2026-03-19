@@ -1,18 +1,6 @@
 #!/bin/bash
 set -e
 
-echo "Starting Laravel deployment..."
-
-if [ ! -f artisan ]; then
-  echo "Error: artisan not found. Ensure you are in project root."
-  exit 1
-fi
-
-if [ ! -f .env ]; then
-  cp .env.example .env
-  echo ".env created from .env.example"
-fi
-
 required_composer_files=(
   "vendor/autoload.php"
   "vendor/composer/autoload_classmap.php"
@@ -25,6 +13,32 @@ required_composer_files=(
   "vendor/composer/installed.php"
 )
 
+has_placeholder_vendor() {
+  grep -q "Placeholder only" vendor/composer/installed.json 2>/dev/null \
+    || grep -q "ships without full Composer dependencies" vendor/autoload.php 2>/dev/null
+}
+
+print_vendor_rebuild_help() {
+  echo "Placeholder vendor files detected."
+  echo "To prepare a real deployment package, build dependencies on a connected Linux machine that matches the target OS as closely as possible (for example Red Hat 8.10)."
+  echo "Suggested commands:"
+  echo "  rm -rf vendor/"
+  echo "  composer install --no-dev --optimize-autoloader"
+  echo "Then copy the generated vendor/ directory back into this project and rerun ./deploy.sh."
+}
+
+echo "Starting Laravel deployment..."
+
+if [ ! -f artisan ]; then
+  echo "Error: artisan not found. Ensure you are in project root."
+  exit 1
+fi
+
+if [ ! -f .env ]; then
+  cp .env.example .env
+  echo ".env created from .env.example"
+fi
+
 for file in "${required_composer_files[@]}"; do
   if [ ! -f "$file" ]; then
     echo "Error: Composer dependencies are incomplete ($file missing)."
@@ -33,9 +47,23 @@ for file in "${required_composer_files[@]}"; do
   fi
 done
 
-if grep -q "Placeholder only" vendor/composer/installed.json 2>/dev/null; then
-  echo "Error: Placeholder vendor files detected. Replace with a real Composer-built vendor directory."
-  exit 1
+if has_placeholder_vendor; then
+  if command -v composer >/dev/null 2>&1; then
+    echo "Placeholder vendor files detected. Attempting to rebuild Composer autoload files locally..."
+    rm -rf vendor/
+
+    if composer install --no-dev --optimize-autoloader; then
+      echo "Composer dependencies rebuilt successfully."
+    else
+      echo "Error: automatic Composer install failed."
+      print_vendor_rebuild_help
+      exit 1
+    fi
+  else
+    echo "Error: Placeholder vendor files detected and Composer is not available on this server."
+    print_vendor_rebuild_help
+    exit 1
+  fi
 fi
 
 php artisan key:generate --force
