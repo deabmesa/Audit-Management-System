@@ -32,6 +32,44 @@ Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`)
 - `reviewer@audit.local` / `password123`
 
 
+
+## System structure diagram
+```mermaid
+graph TD
+    User[User Browser] --> UI[Blade + Bootstrap UI]
+    UI --> Routes[Laravel Routes]
+    Routes --> Controllers[Controllers]
+    Controllers --> Models[Eloquent Models]
+    Models --> PG[(PostgreSQL)]
+    Controllers --> Views[Blade Views]
+    Controllers --> Logs[User Activity Logs]
+    Deploy[deploy.sh / Docker Entrypoint] --> App[Laravel Application]
+    Docker[Docker Compose] --> App
+    Docker --> PG
+```
+
+## Deployment process diagram
+```mermaid
+flowchart TD
+    Start([Start Deployment]) --> CheckEnv{.env exists?}
+    CheckEnv -- No --> CopyEnv[Copy .env.example to .env]
+    CheckEnv -- Yes --> VendorCheck
+    CopyEnv --> VendorCheck{Real vendor available?}
+    VendorCheck -- Yes --> Bootstrap[Run deploy.sh bootstrap steps]
+    VendorCheck -- No --> ArchiveCheck{vendor archive present?}
+    ArchiveCheck -- Yes --> Extract[Extract vendor.tar.gz / vendor.zip]
+    ArchiveCheck -- No --> ComposerCheck{Composer available?}
+    Extract --> Bootstrap
+    ComposerCheck -- Yes --> ComposerInstall[composer install --no-dev --optimize-autoloader]
+    ComposerCheck -- No --> Stop[Stop with guidance]
+    ComposerInstall --> Bootstrap
+    Bootstrap --> Key[Generate app key]
+    Key --> Cache[Clear/cache configuration]
+    Cache --> Migrate[Run migrations]
+    Migrate --> Seed[Seed demo data]
+    Seed --> Serve[Start Laravel server]
+```
+
 ## Troubleshooting
 - Error about incomplete Composer dependencies means the full `vendor/` package was not included (both `vendor/autoload.php` and `vendor/composer/autoload_real.php` are required).
 - Build dependencies on a connected Linux machine with:
