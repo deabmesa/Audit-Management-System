@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FollowUpController;
+use App\Http\Controllers\MenuBuilderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,12 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:Admin')->group(function () {
         Route::resource('users', UserController::class)->except('show');
         Route::get('user-activity-logs', [UserController::class, 'logs'])->name('users.logs');
+
+        Route::get('admin/menu', [MenuBuilderController::class, 'index'])->name('admin.menu.index');
+        Route::post('admin/menu', [MenuBuilderController::class, 'store'])->name('admin.menu.store');
+        Route::put('admin/menu/{menuItem}', [MenuBuilderController::class, 'update'])->name('admin.menu.update');
+        Route::delete('admin/menu/{menuItem}', [MenuBuilderController::class, 'destroy'])->name('admin.menu.destroy');
+        Route::post('admin/menu/reorder', [MenuBuilderController::class, 'reorder'])->name('admin.menu.reorder');
     });
 
     Route::resource('audits', AuditEngagementController::class)->only(['index', 'create', 'store', 'show']);

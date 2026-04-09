@@ -8,6 +8,7 @@ Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`)
 - Audit Findings
 - Follow-up Tracking
 - Dashboard analytics
+- RBAC Dynamic Menu Builder (drag & drop ordering)
 
 ## Project structure delivered
 - Laravel-style app bootstrapping (`artisan`, `bootstrap/app.php`, `public/index.php`)
@@ -82,6 +83,11 @@ flowchart TD
 - If that automatic rebuild fails, replace the placeholder files with the complete generated `vendor/` directory or include a packaged vendor archive.
 - Copy the resulting `vendor/` folder or packaged vendor archive into this project before running `./deploy.sh`.
 
+
+## RBAC dynamic menu
+- Admin users can manage menu visibility by role and order from **Admin > Menu Builder**.
+- Drag and drop menu rows to change order; updates are saved instantly.
+- Menu entries support Laravel route names or custom URLs, with per-role visibility rules.
 
 ## Docker run
 1. Package real Composer dependencies into `vendor/` or provide `vendor.tar.gz` in the project root.

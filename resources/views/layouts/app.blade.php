@@ -14,12 +14,15 @@
             <a class="navbar-brand" href="{{ route('dashboard') }}">AuditMS</a>
             @auth
                 <div class="navbar-nav">
-                    <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
-                    <a class="nav-link" href="{{ route('audits.index') }}">Audits</a>
-                    @if(auth()->user()->hasRole('Admin'))
-                        <a class="nav-link" href="{{ route('users.index') }}">Users</a>
-                        <a class="nav-link" href="{{ route('users.logs') }}">Activity Logs</a>
-                    @endif
+                    @forelse(($dynamicMenuItems ?? collect()) as $menuItem)
+                        @if($menuItem->route_name)
+                            <a class="nav-link" href="{{ route($menuItem->route_name) }}">{{ $menuItem->title }}</a>
+                        @elseif($menuItem->url)
+                            <a class="nav-link" href="{{ $menuItem->url }}">{{ $menuItem->title }}</a>
+                        @endif
+                    @empty
+                        <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                    @endforelse
                 </div>
             @endauth
         </div>
