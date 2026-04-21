@@ -8,7 +8,7 @@ Offline-ready Audit Management System with RBAC (`Admin`, `Auditor`, `Reviewer`)
 - Audit Findings
 - Follow-up Tracking
 - Dashboard analytics
-- RBAC Dynamic Menu Builder (drag & drop ordering)
+- RBAC Dynamic Menu Builder (drag & drop ordering, Vue.js UI)
 
 ## Project structure delivered
 - Laravel-style app bootstrapping (`artisan`, `bootstrap/app.php`, `public/index.php`)
@@ -86,6 +86,7 @@ flowchart TD
 
 ## RBAC dynamic menu
 - Admin users can manage menu visibility by role and order from **Admin > Menu Builder**.
+- Menu Builder UI is implemented with Vue.js for inline create/update/delete and drag-drop reordering without page refresh.
 - Drag and drop menu rows to change order; updates are saved instantly.
 - Menu entries support Laravel route names or custom URLs, with per-role visibility rules.
 

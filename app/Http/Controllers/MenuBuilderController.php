@@ -19,21 +19,28 @@ class MenuBuilderController extends Controller
         return view('admin.menu-builder', compact('menuItems', 'roles'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): JsonResponse|RedirectResponse
     {
         $data = $this->validatedData($request);
 
-        MenuItem::create([
+        $menuItem = MenuItem::create([
             ...$data,
             'sort_order' => (int) MenuItem::max('sort_order') + 1,
             'is_active' => $request->boolean('is_active', true),
             'roles' => $this->normalizedRoles($data['roles'] ?? null),
         ]);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Menu item created.',
+                'item' => $menuItem,
+            ]);
+        }
+
         return back()->with('success', 'Menu item created.');
     }
 
-    public function update(Request $request, MenuItem $menuItem): RedirectResponse
+    public function update(Request $request, MenuItem $menuItem): JsonResponse|RedirectResponse
     {
         $data = $this->validatedData($request);
 
@@ -43,12 +50,23 @@ class MenuBuilderController extends Controller
             'roles' => $this->normalizedRoles($data['roles'] ?? null),
         ]);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Menu item updated.',
+                'item' => $menuItem->fresh(),
+            ]);
+        }
+
         return back()->with('success', 'Menu item updated.');
     }
 
-    public function destroy(MenuItem $menuItem): RedirectResponse
+    public function destroy(Request $request, MenuItem $menuItem): JsonResponse|RedirectResponse
     {
         $menuItem->delete();
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Menu item deleted.']);
+        }
 
         return back()->with('success', 'Menu item deleted.');
     }
