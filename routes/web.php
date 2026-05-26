@@ -63,7 +63,7 @@ Route::middleware('guest')->group(function () {
 | AUTH ROUTES
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -147,12 +147,13 @@ Route::middleware(['auth'])->group(function () {
     | 🔥 DYNAMIC MENU ENGINE (VERY IMPORTANT)
     |--------------------------------------------------------------------------
     | This replaces your old /menu/{route} and view-only logic
+    | ✅ FIXED: Added proper route constraints to prevent invalid controller names
     */
     Route::get('/{module}/{page}', [DynamicController::class, 'handle'])
         ->where([
-            'module' => '[A-Za-z0-9_-]+',
-            'page'   => '[A-Za-z0-9_-]+'
-        ]);
+            'module' => '[A-Za-z]+',     // ✅ FIXED: Only letters (no numbers, dashes)
+            'page'   => '[A-Za-z]+'      // ✅ FIXED: Only letters (no numbers, dashes)
+        ])->name('dynamic.handle');
 
 });
 
@@ -162,14 +163,12 @@ Route::middleware(['auth'])->group(function () {
 | EXTRA PERMISSION ROUTES (OPTIONAL)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'permission:manage_roles'])->group(function () {
+    Route::resource('roles', RoleController::class);
+});
 
-    Route::resource('roles', RoleController::class)
-        ->middleware('permission:manage_roles');
-
-    Route::resource('users', UserController::class)
-        ->middleware('permission:manage_users');
-
+Route::middleware(['auth', 'permission:manage_users'])->group(function () {
+    Route::resource('users', UserController::class);
 });
 
 
