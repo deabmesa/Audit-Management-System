@@ -1,0 +1,69 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$command = $argv[1] ?? 'help';
+
+if ($command === 'serve') {
+    $host = '127.0.0.1';
+    $port = '8000';
+
+    foreach ($argv as $arg) {
+        if (str_starts_with($arg, '--host=')) {
+            $host = substr($arg, 7);
+        }
+        if (str_starts_with($arg, '--port=')) {
+            $port = substr($arg, 7);
+        }
+    }
+
+    fwrite(STDOUT, "Starting development server: http://{$host}:{$port}\n");
+    passthru(sprintf('php -S %s:%s -t public', escapeshellarg($host), escapeshellarg($port)), $exitCode);
+    exit($exitCode);
+}
+
+if ($command === 'key:generate') {
+    $envFile = __DIR__ . '/.env';
+    $exampleFile = __DIR__ . '/.env.example';
+
+    if (!file_exists($envFile) && file_exists($exampleFile)) {
+        copy($exampleFile, $envFile);
+        fwrite(STDOUT, "Created .env from .env.example\n");
+    }
+
+    if (!file_exists($envFile)) {
+        fwrite(STDERR, ".env file not found and .env.example unavailable.\n");
+        exit(1);
+    }
+
+    $key = 'base64:' . base64_encode(random_bytes(32));
+    $content = file_get_contents($envFile);
+
+    if ($content === false) {
+        fwrite(STDERR, "Unable to read .env file\n");
+        exit(1);
+    }
+
+    if (preg_match('/^APP_KEY=.*$/m', $content)) {
+        $content = preg_replace('/^APP_KEY=.*$/m', 'APP_KEY=' . $key, $content);
+    } else {
+        $content .= PHP_EOL . 'APP_KEY=' . $key . PHP_EOL;
+    }
+
+    file_put_contents($envFile, $content);
+    fwrite(STDOUT, "Application key set successfully.\n");
+    exit(0);
+}
+
+if ($command === 'help' || $command === '--help' || $command === '-h') {
+    fwrite(STDOUT, "Audit Management System CLI\n\n");
+    fwrite(STDOUT, "Supported commands:\n");
+    fwrite(STDOUT, "  serve [--host=127.0.0.1] [--port=8000]   Start local dev server\n");
+    fwrite(STDOUT, "  key:generate                               Generate APP_KEY in .env\n");
+    exit(0);
+}
+
+fwrite(STDERR, "Command '{$command}' is not available in this lightweight scaffold.\n");
+fwrite(STDERR, "Use 'php artisan help' or './scripts/dev/artisan.sh <command>'.\n");
+exit(1);
