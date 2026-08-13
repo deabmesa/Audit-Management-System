@@ -1,0 +1,58 @@
+server:
+  port: 8080
+  shutdown: graceful
+
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  jpa:
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+
+app:
+  datasource:
+    oracle:
+      jdbc-url: ${ORACLE_JDBC_URL:jdbc:oracle:thin:@localhost:1521/XEPDB1}
+      username: ${ORACLE_USERNAME:audit_app}
+      password: ${ORACLE_PASSWORD:audit_app}
+      driver-class-name: oracle.jdbc.OracleDriver
+      hikari:
+        maximum-pool-size: ${ORACLE_POOL_MAX:20}
+        minimum-idle: ${ORACLE_POOL_MIN:5}
+        pool-name: OraclePool
+        connection-timeout: 30000
+    oracle-read-only:
+      jdbc-url: ${ORACLE_READONLY_JDBC_URL:jdbc:oracle:thin:@localhost:1521/XEPDB1}
+      username: ${ORACLE_READONLY_USERNAME:audit_report_reader}
+      password: ${ORACLE_READONLY_PASSWORD:audit_report_reader}
+      driver-class-name: oracle.jdbc.OracleDriver
+      hikari:
+        read-only: true
+        maximum-pool-size: ${ORACLE_READONLY_POOL_MAX:8}
+        minimum-idle: ${ORACLE_READONLY_POOL_MIN:2}
+        pool-name: OracleReadOnlyPool
+        connection-timeout: 30000
+    postgres:
+      jdbc-url: ${POSTGRES_JDBC_URL:jdbc:postgresql://localhost:5432/audit_reporting}
+      username: ${POSTGRES_USERNAME:audit_reporting}
+      password: ${POSTGRES_PASSWORD:audit_reporting}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: ${POSTGRES_POOL_MAX:10}
+        minimum-idle: ${POSTGRES_POOL_MIN:3}
+        pool-name: PostgresPool
+        connection-timeout: 30000
+  security:
+    jwt:
+      secret: ${JWT_SECRET:change-this-secret-key-to-a-secure-minimum-32-characters}
+      expiration-ms: ${JWT_EXPIRATION_MS:3600000}
+
+logging:
+  file:
+    name: ${APP_LOG_FILE:/var/log/audit-management/audit-management.log}
+  level:
+    root: INFO
+    com.example.auditmanagement: INFO
