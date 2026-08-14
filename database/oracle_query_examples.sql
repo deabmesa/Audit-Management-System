@@ -1,0 +1,13 @@
+-- Oracle read-only report query for PAMS dashboard listing.
+SELECT REPORT_ID, AUDIT_NAME, STATUS, REPORT_DATE
+FROM PAMS_REPORT_VW
+WHERE (:keyword IS NULL OR LOWER(AUDIT_NAME) LIKE '%' || LOWER(:keyword) || '%')
+  AND (:status IS NULL OR STATUS = :status)
+ORDER BY REPORT_DATE DESC
+FETCH NEXT 20 ROWS ONLY;
+
+-- Aggregated metrics for chart cards.
+SELECT STATUS, COUNT(*) AS TOTAL
+FROM PAMS_REPORT_VW
+GROUP BY STATUS
+ORDER BY STATUS;
